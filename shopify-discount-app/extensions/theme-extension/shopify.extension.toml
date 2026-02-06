@@ -1,0 +1,14 @@
+[extension]
+type = "theme_app_extension"
+name = "volume-discount-widget"
+
+[[extension.settings]]
+type = "header"
+content = "Volume Discount Widget"
+
+[[extension.settings]]
+type = "text"
+id = "widget_text"
+label = "Widget Text"
+default = "Buy 2, get {percent}% off"
+info = "Use {percent} to display the discount percentage"

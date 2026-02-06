@@ -1,0 +1,13 @@
+[extension]
+type = "function"
+name = "volume-discount-function"
+handle = "volume-discount"
+
+[function]
+name = "volume-discount"
+target = "purchase.discount-allocation.run"
+input_query = "src/run.graphql"
+
+[build]
+command = "cargo wasi build --release"
+path = "target/wasm32-wasi/release/volume_discount.wasm"

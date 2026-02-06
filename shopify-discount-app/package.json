@@ -1,0 +1,23 @@
+{
+  "name": "volume-discount-app",
+  "version": "1.0.0",
+  "description": "Shopify app for volume discounts",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "build-function": "cd extensions/discount-function && cargo wasi build --release",
+    "deploy": "shopify app deploy",
+    "test": "echo \"No tests yet\" && exit 0",
+    "health": "curl http://localhost:3000/api/health"
+  },
+  "keywords": ["shopify", "discount", "volume", "app"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}

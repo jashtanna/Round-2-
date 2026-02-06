@@ -1,0 +1,42 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "volume-discount-app"
+client_id = "{{ SHOPIFY_API_KEY }}"
+application_url = "{{ APPLICATION_URL }}"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_discounts,read_products,write_themes,read_themes"
+
+[auth]
+redirect_urls = [
+  "{{ APPLICATION_URL }}/auth/callback",
+  "{{ APPLICATION_URL }}/auth/shopify/callback",
+  "{{ APPLICATION_URL }}/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2023-10"
+
+[pos]
+embedded = false
+
+[[extensions]]
+type = "function"
+name = "volume-discount-function"
+handle = "volume-discount"
+
+[extensions.function]
+name = "volume-discount"
+target = "purchase.discount.run"
+input_query = "extensions/discount-function/src/run.graphql"
+
+[extensions.build]
+command = "cargo wasi build --release"
+path = "extensions/discount-function/target/wasm32-wasi/release/volume_discount.wasm"
+
+[[extensions]]
+type = "theme_app_extension"
+name = "volume-discount-widget"
+handle = "volume-discount-widget"

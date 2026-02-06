@@ -1,0 +1,119 @@
+{%- liquid
+  assign discount_rules = shop.metafields.volume_discount.rules
+  assign rules = discount_rules.value | parse_json
+  assign current_product_id = 'gid://shopify/Product/' | append: product.id
+  assign is_qualifying_product = false
+  
+  if rules and rules.products
+    for product_id in rules.products
+      if product_id == current_product_id
+        assign is_qualifying_product = true
+        break
+      endif
+    endfor
+  endif
+-%}
+
+{% if is_qualifying_product and rules.percentOff %}
+  <div class="volume-discount-widget" 
+       data-product-id="{{ product.id }}" 
+       data-discount="{{ rules.percentOff }}">
+    
+    <div class="volume-discount-badge">
+      <svg class="volume-discount-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+      </svg>
+      
+      <span class="volume-discount-text">
+        {% if block.settings.widget_text != blank %}
+          {{ block.settings.widget_text | replace: '{percent}', rules.percentOff }}
+        {% else %}
+          Buy 2, get {{ rules.percentOff }}% off
+        {% endif %}
+      </span>
+    </div>
+    
+    <div class="volume-discount-details">
+      <small>Add 2 or more to cart to qualify</small>
+    </div>
+  </div>
+{% endif %}
+
+<style>
+  .volume-discount-widget {
+    margin: 15px 0;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-family: var(--font-body-family, system-ui, -apple-system, sans-serif);
+  }
+  
+  .volume-discount-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  
+  .volume-discount-icon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.9;
+  }
+  
+  .volume-discount-text {
+    flex: 1;
+  }
+  
+  .volume-discount-details {
+    opacity: 0.85;
+    font-size: 12px;
+    font-weight: 400;
+  }
+  
+  @media (max-width: 768px) {
+    .volume-discount-widget {
+      margin: 10px 0;
+      padding: 10px 12px;
+    }
+    
+    .volume-discount-badge {
+      font-size: 13px;
+    }
+    
+    .volume-discount-details {
+      font-size: 11px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Volume Discount",
+  "target": "section",
+  "available_if": "{{ app.metafields.volume_discount.rules.value != blank }}",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Volume Discount Widget"
+    },
+    {
+      "type": "text",
+      "id": "widget_text",
+      "label": "Widget Text",
+      "default": "Buy 2, get {percent}% off",
+      "info": "Use {percent} to display the discount percentage"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Volume Discount",
+      "category": "Apps"
+    }
+  ]
+}
+{% endschema %}
