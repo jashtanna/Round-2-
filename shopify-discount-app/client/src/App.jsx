@@ -62,11 +62,8 @@ function App() {
       setIsLoading(true);
       setShowError('');
       
-      const shop = window.shopOrigin || 'test-shop.myshopify.com';
       const updatedRules = { products, minQty: 2, percentOff: percentValue };
-      const response = await axios.post('http://localhost:3000/api/metafields/rules', updatedRules, {
-        params: { shop }
-      });
+      const response = await axios.post('http://localhost:3000/api/metafields/rules', updatedRules);
       
       if (response.data.success) {
         setRules(updatedRules);
@@ -90,13 +87,13 @@ function App() {
       
       {showSuccess && (
         <div style={{ background: '#d4edda', color: '#155724', padding: '12px', borderRadius: '4px', marginBottom: '20px' }}>
-          ✅ Settings saved successfully!
+           Settings saved successfully!
         </div>
       )}
       
       {showError && (
         <div style={{ background: '#f8d7da', color: '#721c24', padding: '12px', borderRadius: '4px', marginBottom: '20px' }}>
-          ❌ {showError}
+           {showError}
         </div>
       )}
       
