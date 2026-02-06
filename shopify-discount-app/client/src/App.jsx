@@ -62,8 +62,11 @@ function App() {
       setIsLoading(true);
       setShowError('');
       
+      const shop = window.shopOrigin || 'test-shop.myshopify.com';
       const updatedRules = { products, minQty: 2, percentOff: percentValue };
-      const response = await axios.post('http://localhost:3000/api/metafields/rules', updatedRules);
+      const response = await axios.post('http://localhost:3000/api/metafields/rules', updatedRules, {
+        params: { shop }
+      });
       
       if (response.data.success) {
         setRules(updatedRules);

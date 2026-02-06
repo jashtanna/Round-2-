@@ -71,8 +71,7 @@ const shopifyAppInstance = shopifyApp({
   },
 });
 
-// Comment out for development - Shopify middleware can cause issues in dev mode
-// app.use(shopifyAppInstance);
+app.use(shopifyAppInstance);
 
 // Middleware to ensure authenticated session
 const ensureAuthenticated = async (req, res, next) => {
