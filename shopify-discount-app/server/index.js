@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const { shopifyApi, LATEST_API_VERSION } = require('@shopify/shopify-api');
+const { shopifyApi, LATEST_API_VERSION, Session } = require('@shopify/shopify-api');
 const { shopifyApp } = require('@shopify/shopify-app-express');
 require('dotenv').config();
 
@@ -62,10 +62,17 @@ const shopifyAppInstance = shopifyApp({
   webhooks: {
     path: '/api/webhooks',
   },
-  sessionStorage: new shopify.session.MemorySessionStorage(),
+  sessionStorage: {
+    storeSession: async (session) => {},
+    loadSession: async (id) => { return undefined; },
+    deleteSession: async (id) => { return true; },
+    deleteSessions: async (ids) => { return true; },
+    findSessionsByShop: async (shop) => { return []; }
+  },
 });
 
-app.use(shopifyAppInstance);
+// Comment out for development - Shopify middleware can cause issues in dev mode
+// app.use(shopifyAppInstance);
 
 // Middleware to ensure authenticated session
 const ensureAuthenticated = async (req, res, next) => {
