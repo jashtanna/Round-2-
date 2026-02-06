@@ -71,7 +71,7 @@ const shopifyAppInstance = shopifyApp({
   },
 });
 
-app.use(shopifyAppInstance);
+// app.use(shopifyAppInstance);
 
 // Middleware to ensure authenticated session
 const ensureAuthenticated = async (req, res, next) => {
